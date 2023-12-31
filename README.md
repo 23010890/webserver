@@ -28,35 +28,42 @@ Testing the webserver
 
 ## PROGRAM:
 ```
-from http.server import HTTPServer,BaseHTTPRequestHandler
-
-content='''
-<!doctype html>
-<html>
-<head>
-<title> My Web Server</title>
-</head>
-<body>
-<h1>Top Five Web Application Development Frameworks</h1>
-<h2>1.Django</h2>
-<h2>2. MEAN Stack</h2>
-<h2>3. React </h2>
-</body>
+Creating a Simple Web Server to serve a page: 
+If we have an HTML file, mywebpage.html, that we want to serve: 
+<!DOCTYPE html> 
+<html> 
+<head> 
+<title>Using Python's SimpleHTTPServer Module</title> 
+<style> 
+#rectangle { 
+height: 50px; 
+width: 100px; 
+background-color: #00f28f; 
+} 
+</style> 
+</head> 
+<body> 
+<h2>Rectangle served by SimpleHTTPServer</h2> 
+<div id="rectangle"></div> 
+</body> 
 </html>
-'''
 
-class MyServer(BaseHTTPRequestHandler):
-    def do_GET(self):
-        print("Get request received...")
-        self.send_response(200) 
-        self.send_header("content-type", "text/html")       
-        self.end_headers()
-        self.wfile.write(content.encode())
 
-print("This is my webserver") 
-server_address =('',8000)
-httpd = HTTPServer(server_address,MyServer)
-httpd.serve_forever()
+We can use our custom handler to serve it on any path we want. In this example       
+we'll just serve it on the root path, /: 
+import http.server 
+import socketserver 
+class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler): 
+def do_GET(self): 
+if self.path == '/': 
+self.path = 'mywebpage.html' 
+return http.server.SimpleHTTPRequestHandler.do_GET(self) 
+
+handler_object = MyHttpRequestHandler 
+PORT = 8000 
+my_server = socketserver.TCPServer(("", PORT), handler_object) 
+ 
+my_server.serve_forever()
 ```
 ## OUTPUT:
 # CLIENT OUTPUT:
